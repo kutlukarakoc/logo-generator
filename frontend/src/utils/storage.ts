@@ -1,36 +1,36 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Signature } from '../types';
+import { Logo } from '../types';
 
-const SIGNATURES_STORAGE_KEY = '@signatures';
+const LOGOS_STORAGE_KEY = '@logos';
 
-export async function saveSignatureToStorage(signature: Signature): Promise<void> {
+export async function saveLogoToStorage(logo: Logo): Promise<void> {
   try {
-    const existingSignaturesString = await AsyncStorage.getItem(SIGNATURES_STORAGE_KEY);
-    const existingSignatures: Signature[] = existingSignaturesString ? JSON.parse(existingSignaturesString) : [];
+    const existingLogosString = await AsyncStorage.getItem(LOGOS_STORAGE_KEY);
+    const existingLogos: Logo[] = existingLogosString ? JSON.parse(existingLogosString) : [];
     
-    const updatedSignatures = [signature, ...existingSignatures];
-    await AsyncStorage.setItem(SIGNATURES_STORAGE_KEY, JSON.stringify(updatedSignatures));
+    const updatedLogos = [logo, ...existingLogos];
+    await AsyncStorage.setItem(LOGOS_STORAGE_KEY, JSON.stringify(updatedLogos));
   } catch (error) {
-    console.error('Error saving signature to storage:', error);
+    console.error('Error saving logo to storage:', error);
     throw error;
   }
 }
 
-export async function getSignaturesFromStorage(): Promise<Signature[]> {
+export async function getLogosFromStorage(): Promise<Logo[]> {
   try {
-    const signaturesString = await AsyncStorage.getItem(SIGNATURES_STORAGE_KEY);
-    return signaturesString ? JSON.parse(signaturesString) : [];
+    const logosString = await AsyncStorage.getItem(LOGOS_STORAGE_KEY);
+    return logosString ? JSON.parse(logosString) : [];
   } catch (error) {
-    console.error('Error getting signatures from storage:', error);
+    console.error('Error getting logos from storage:', error);
     return [];
   }
 }
 
-export async function clearSignaturesFromStorage(): Promise<void> {
+export async function clearLogosFromStorage(): Promise<void> {
   try {
-    await AsyncStorage.removeItem(SIGNATURES_STORAGE_KEY);
+    await AsyncStorage.removeItem(LOGOS_STORAGE_KEY);
   } catch (error) {
-    console.error('Error clearing signatures from storage:', error);
+    console.error('Error clearing logos from storage:', error);
     throw error;
   }
 } 

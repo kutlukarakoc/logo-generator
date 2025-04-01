@@ -1,6 +1,6 @@
-export const API_BASE_URL = 'http://localhost:8080/api';
+export const API_BASE_URL = 'https://logo-generator-production.up.railway.app/api';
 
 export const ENDPOINTS = {
-  GENERATE_SIGNATURE: `${API_BASE_URL}/signature/generate`,
-  CHECK_STATUS: (id: string) => `${API_BASE_URL}/signature/status/${id}`,
+  GENERATE_LOGO: `${API_BASE_URL}/logo/generate`,
+  CHECK_STATUS: (id: string) => `${API_BASE_URL}/logo/status/${id}`,
 }; 

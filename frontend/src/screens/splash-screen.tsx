@@ -1,161 +1,152 @@
 import React, { useEffect, useRef } from "react";
 import {
+  StyleSheet,
   View,
   Text,
-  StyleSheet,
+  Dimensions,
   Animated,
   Easing,
-  SafeAreaView,
+  Image,
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { LinearGradient } from "expo-linear-gradient";
-import { getSignaturesFromStorage } from "../utils/storage";
-import { useSignatureContext } from "../contexts/SignatureContext";
+import { getLogosFromStorage } from "../utils/storage";
+import { useLogoContext } from "../contexts/LogoContext";
 
-export function SplashScreen({ onFinish }: { onFinish: () => void }) {
+interface SplashScreenProps {
+  onFinish: () => void;
+}
+
+export function SplashScreen({ onFinish }: SplashScreenProps) {
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.3)).current;
-  const textOpacity = useRef(new Animated.Value(0)).current;
-  const textPosition = useRef(new Animated.Value(20)).current;
-
-  const { dispatch } = useSignatureContext();
+  const scaleAnim = useRef(new Animated.Value(0)).current;
+  const titleFadeAnim = useRef(new Animated.Value(0)).current;
+  const subtitleFadeAnim = useRef(new Animated.Value(0)).current;
+  const { dispatch } = useLogoContext();
 
   useEffect(() => {
-    // Animation sequence
-    const animateElements = async () => {
-      // First animate the signature icon
+    // Start animations in sequence
+    Animated.sequence([
+      // First animate the logo
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 1,
           duration: 800,
           useNativeDriver: true,
-          easing: Easing.bezier(0.16, 1, 0.3, 1),
         }),
         Animated.timing(scaleAnim, {
           toValue: 1,
           duration: 800,
+          easing: Easing.out(Easing.back(1.5)),
           useNativeDriver: true,
-          easing: Easing.bezier(0.16, 1, 0.3, 1),
         }),
-      ]).start();
+      ]),
+      // Then fade in the title
+      Animated.timing(titleFadeAnim, {
+        toValue: 1,
+        duration: 500,
+        delay: 200,
+        useNativeDriver: true,
+      }),
+      // Then fade in the subtitle
+      Animated.timing(subtitleFadeAnim, {
+        toValue: 1,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+    ]).start();
 
-      // Then animate the text elements
-      setTimeout(() => {
-        Animated.parallel([
-          Animated.timing(textOpacity, {
-            toValue: 1,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-          Animated.timing(textPosition, {
-            toValue: 0,
-            duration: 500,
-            useNativeDriver: true,
-          }),
-        ]).start();
-      }, 400);
+    // Load data from AsyncStorage
+    const loadData = async () => {
+      try {
+        // Fetch saved logos from storage
+        const savedLogos = await getLogosFromStorage();
+        dispatch({ type: "SET_LOGOS", payload: savedLogos || [] });
 
-      // Fetch saved signatures from storage
-      const savedSignatures = await getSignaturesFromStorage();
-      dispatch({ type: "SET_SIGNATURES", payload: savedSignatures || [] });
+        // Use a minimum timeout to ensure animations complete
+        await new Promise((resolve) => setTimeout(resolve, 2500));
 
-      // Finish the splash screen after the animation
-      setTimeout(() => {
+        // Finish splash screen
         onFinish();
-      }, 2500);
+      } catch (error) {
+        console.error("Error loading data:", error);
+        // Even if there's an error, continue to the app
+        onFinish();
+      }
     };
 
-    animateElements();
+    loadData();
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
-      <LinearGradient
-        colors={["#4a6ee0", "#7467ef"]}
-        style={styles.background}
-      >
-        <View style={styles.content}>
-          <Animated.View
-            style={[
-              styles.signatureContainer,
-              {
-                opacity: fadeAnim,
-                transform: [{ scale: scaleAnim }],
-              },
-            ]}
-          >
-            <Text style={styles.iconText}>✒️</Text>
-          </Animated.View>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Animated.View
+          style={[
+            styles.logoContainer,
+            {
+              opacity: fadeAnim,
+              transform: [{ scale: scaleAnim }],
+            },
+          ]}
+        >
+          <Image
+            source={require("../../assets/icon.png")}
+            style={{ width: 200, height: 200 }}
+          />
+        </Animated.View>
 
-          <Animated.Text
-            style={[
-              styles.signatureText,
-              {
-                opacity: textOpacity,
-                transform: [{ translateY: textPosition }],
-              },
-            ]}
-          >
-            Signature Generator
-          </Animated.Text>
+        <Animated.Text style={[styles.title, { opacity: titleFadeAnim }]}>
+          Logo Generator
+        </Animated.Text>
 
-          <Animated.Text
-            style={[
-              styles.tagline,
-              {
-                opacity: textOpacity,
-                transform: [{ translateY: textPosition }],
-              },
-            ]}
-          >
-            Create amazing signatures with AI
-          </Animated.Text>
-        </View>
-      </LinearGradient>
-    </SafeAreaView>
+        <Animated.Text style={[styles.subtitle, { opacity: subtitleFadeAnim }]}>
+          Create amazing logos with AI
+        </Animated.Text>
+      </View>
+    </View>
   );
 }
+
+const { width } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  background: {
-    flex: 1,
+    backgroundColor: "#6c5ce7", // Mor arka plan rengi
+    alignItems: "center",
+    justifyContent: "center",
   },
   content: {
-    flex: 1,
-    justifyContent: "center",
     alignItems: "center",
-  },
-  signatureContainer: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
     justifyContent: "center",
+    padding: 20,
+  },
+  logoContainer: {
+    width: width * 0.5,
+    height: width * 0.5,
     alignItems: "center",
-    marginBottom: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 10,
+    justifyContent: "center",
   },
-  iconText: {
-    fontSize: 60,
-  },
-  signatureText: {
-    fontSize: 32,
-    fontWeight: "700",
+  logoText: {
+    fontSize: 48,
+    fontWeight: "bold",
     color: "white",
-    marginBottom: 12,
+    textShadowColor: "rgba(0, 0, 0, 0.2)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 3,
   },
-  tagline: {
-    fontSize: 18,
-    color: "rgba(255, 255, 255, 0.9)",
+  title: {
+    fontSize: 36,
+    fontWeight: "bold",
+    color: "#fff", // Beyaz yazı rengi
+    marginBottom: 12,
     textAlign: "center",
-    paddingHorizontal: 40,
+    textShadowColor: "rgba(0, 0, 0, 0.3)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
+  },
+  subtitle: {
+    fontSize: 20,
+    color: "#f8f9fa", // Daha açık renk yazı
+    textAlign: "center",
   },
 });

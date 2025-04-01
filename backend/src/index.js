@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const signatureRoutes = require('./routes/signatureRoutes');
+const logoRoutes = require('./routes/logoRoutes');
 
 dotenv.config();
 
@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api/signature', signatureRoutes);
+app.use('/api/logo', logoRoutes);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

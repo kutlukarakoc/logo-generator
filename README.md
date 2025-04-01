@@ -1,107 +1,90 @@
-# AI Signature Generator
+# AI Logo Generator
 
-An AI-powered signature generator application built with React Native, Expo, and Node.js. This application allows users to generate custom handwritten signatures by providing text prompts. Generated signatures can be downloaded, shared, and viewed in a history section.
+An AI-powered logo generator application built with React Native, Expo, and Node.js. This application allows users to generate custom logos by providing text prompts. Generated logos can be downloaded, shared, and viewed in a history section.
 
 ## Features
 
-- Generate custom signatures using AI
-- Save generated signatures to your device
-- Share signatures with others
-- View history of previously generated signatures
-- Choose from different signature styles
+- Generate custom logos using AI
+- Save generated logos to your device
+- Share logos with others
+- View history of previously generated logos
+- Simple and intuitive interface
 
-## Technology Stack
+## Tech Stack
 
 ### Frontend
 - React Native
 - Expo
 - TypeScript
-- Context API for state management
+- React Navigation
 - AsyncStorage for local storage
 
 ### Backend
 - Node.js
 - Express.js
-- Replicate AI API for signature generation
-
-## Project Structure
-
-```
-project/
-│
-├── frontend/           # React Native Expo app
-│   ├── assets/         # Images, fonts, etc.
-│   │   └── src/
-│   │       └── App.tsx         # Entry point
-│   └── backend/            # Node.js API server
-│       └── src/
-│           └── index.js     # Server entry point
-```
+- TypeScript
+- Replicate API for logo generation
 
 ## Getting Started
 
 ### Prerequisites
-- Node.js (v14 or later)
+
+- Node.js (v20 or later recommended)
 - npm or yarn
 - Expo CLI
-- Replicate API key
+- Replicate API key (get one from [Replicate](https://replicate.com))
 
 ### Installation
 
-1. Clone the repository
+1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/ai-signature-generator.git
-cd ai-signature-generator
+git clone https://github.com/yourusername/ai-logo-generator.git
+cd ai-logo-generator
 ```
 
-2. Install backend dependencies
+2. Install dependencies:
+
 ```bash
+# Install backend dependencies
 cd backend
 npm install
-```
 
-3. Create a `.env` file in the backend directory with your Replicate API key
-```
-REPLICATE_API_TOKEN=your_api_key_here
-PORT=8080
-```
-
-4. Install frontend dependencies
-```bash
+# Install frontend dependencies
 cd ../frontend
 npm install
 ```
 
-### Running the App
+3. Configure environment variables:
 
-1. Start the backend server
-```bash
-cd backend
-npm start
+Create a `.env` file in the backend directory:
+```
+PORT=3000
+REPLICATE_API_TOKEN=your_replicate_api_token
 ```
 
-2. Start the Expo development server
+4. Start the backend server:
+
+```bash
+cd backend
+npm run dev
+```
+
+5. Start the frontend application:
+
 ```bash
 cd frontend
 npm start
 ```
 
-3. Use the Expo Go app on your device to scan the QR code or use an emulator
+6. Scan the QR code with the Expo Go app on your mobile device or run it in an emulator.
 
 ## Usage
 
-1. Enter a prompt for your signature in the input field (e.g., "John Smith" or "Jane Doe")
-2. Select a style for your signature
-3. Tap "Generate Signature" and wait for the AI to create your signature
-4. Once generated, you can download or share the signature
-5. View your signature history in the History tab
+1. Enter a prompt for your logo in the input field (e.g., "Minimalist tech company logo")
+2. Tap "Generate Logo" and wait for the AI to create your logo
+3. Once generated, you can download or share the logo
+4. View your logo history in the History tab
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- [Replicate AI](https://replicate.com/) for the AI model
-- [Expo](https://expo.dev/) for the development framework
-- [React Native](https://reactnative.dev/) for the mobile app framework 
+This project is licensed under the MIT License - see the LICENSE file for details. 

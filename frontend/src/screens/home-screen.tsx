@@ -12,27 +12,27 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useSignatureContext } from '../contexts/SignatureContext';
+import { useLogoContext } from '../contexts/LogoContext';
 import { StyleSelector } from '../components/style-selector';
-import { SignatureModal } from '../components/signature-modal';
-import { saveSignatureToStorage } from '../utils/storage';
-import { Signature, SignatureStyle, SignatureStyleDescriptions } from '../types';
+import { LogoModal } from '../components/logo-modal';
+import { saveLogoToStorage } from '../utils/storage';
+import { Logo, LogoStyle, LogoStyleDescriptions } from '../types';
 import { LinearGradient } from 'expo-linear-gradient';
 
 export function HomeScreen() {
   const [prompt, setPrompt] = useState('');
-  const [selectedStyle, setSelectedStyle] = useState<SignatureStyle | null>(null);
-  const { state, dispatch, generateSignature } = useSignatureContext();
-  const [currentSignature, setCurrentSignature] = useState<Signature | null>(null);
+  const [selectedStyle, setSelectedStyle] = useState<LogoStyle | null>(null);
+  const { state, dispatch, generateLogo } = useLogoContext();
+  const [currentLogo, setCurrentLogo] = useState<Logo | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleSelectStyle = (style: SignatureStyle) => {
+  const handleSelectStyle = (style: LogoStyle) => {
     setSelectedStyle(style);
   };
 
-  const handleGenerateSignature = async () => {
+  const handleGenerateLogo = async () => {
     if (!prompt.trim()) {
-      Alert.alert('Error', 'Please enter a name');
+      Alert.alert('Error', 'Please enter a prompt');
       return;
     }
 
@@ -42,35 +42,35 @@ export function HomeScreen() {
       
       if (selectedStyle) {
         // If style is selected, append the style description
-        const styleDescription = SignatureStyleDescriptions[selectedStyle];
-        fullPrompt = `AISIGNATURE ${prompt} ${styleDescription}`;
+        const styleDescription = LogoStyleDescriptions[selectedStyle];
+        fullPrompt = `${prompt}. ${styleDescription}`;
       } else {
-        // If no style is selected, just the basic prompt
-        fullPrompt = `AISIGNATURE ${prompt}`;
+        // If no style is selected, just add a generic logo design suffix
+        fullPrompt = `${prompt}. Logo design`;
       }
       
-      const signatureUrl = await generateSignature(fullPrompt);
+      const logoUrl = await generateLogo(fullPrompt);
       
-      if (signatureUrl) {
-        const newSignature: Signature = {
+      if (logoUrl) {
+        const newLogo: Logo = {
           id: Date.now().toString(),
           prompt: prompt,
-          imageUrl: signatureUrl,
+          imageUrl: logoUrl,
           createdAt: new Date().toISOString(),
           style: selectedStyle || undefined,
         };
         
-        setCurrentSignature(newSignature);
-        await saveSignatureToStorage(newSignature);
+        setCurrentLogo(newLogo);
+        await saveLogoToStorage(newLogo);
         
-        // Add the new signature to the context state
-        dispatch({ type: 'ADD_SIGNATURE', payload: newSignature });
+        // Add the new logo to the context state
+        dispatch({ type: 'ADD_LOGO', payload: newLogo });
         
-        // Show the modal with the generated signature
+        // Show the modal with the generated logo
         setModalVisible(true);
       }
     } catch (error) {
-      console.error('Error in handleGenerateSignature:', error);
+      console.error('Error in handleGenerateLogo:', error);
     }
   };
   
@@ -88,19 +88,19 @@ export function HomeScreen() {
           contentContainerStyle={styles.scrollContainer}
           keyboardShouldPersistTaps="handled"
         >
-          <Text style={styles.title}>Signature Generator</Text>
-          <Text style={styles.subtitle}>Create beautiful AI-powered signatures</Text>
+          <Text style={styles.title}>Logo Generator</Text>
+          <Text style={styles.subtitle}>Create beautiful AI-powered logos</Text>
           
           <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Your Name</Text>
+            <Text style={styles.inputLabel}>Your Logo Idea</Text>
             <TextInput
               style={styles.input}
-              placeholder="Enter your name or the name for the signature"
+              placeholder="Enter your brand name, industry, and the elements you want to appear in the logo."
               value={prompt}
               onChangeText={setPrompt}
               multiline
-              numberOfLines={2}
-              maxLength={100}
+              numberOfLines={3}
+              maxLength={200}
             />
           </View>
           
@@ -111,7 +111,7 @@ export function HomeScreen() {
           
           <TouchableOpacity 
             activeOpacity={0.8}
-            onPress={handleGenerateSignature}
+            onPress={handleGenerateLogo}
             disabled={state.isLoading}
             style={styles.generateButtonContainer}
           >
@@ -127,7 +127,7 @@ export function HomeScreen() {
               {state.isLoading ? (
                 <ActivityIndicator color="#fff" size="large" />
               ) : (
-                <Text style={styles.generateButtonText}>Generate Signature</Text>
+                <Text style={styles.generateButtonText}>Generate Logo</Text>
               )}
             </LinearGradient>
           </TouchableOpacity>
@@ -138,9 +138,9 @@ export function HomeScreen() {
         </ScrollView>
       </KeyboardAvoidingView>
       
-      <SignatureModal 
+      <LogoModal 
         visible={modalVisible}
-        signature={currentSignature}
+        logo={currentLogo}
         onClose={handleCloseModal}
       />
     </SafeAreaView>

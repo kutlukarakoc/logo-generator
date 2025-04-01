@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Backend for AI-powered signature generator",
+  "description": "Backend for AI-powered logo generator",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
