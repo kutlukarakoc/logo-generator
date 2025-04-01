@@ -1,90 +1,107 @@
-# AI Logo Generator
+# AI Signature Generator
 
-An AI-powered logo generator application built with React Native, Expo, and Node.js. This application allows users to generate custom logos by providing text prompts. Generated logos can be downloaded, shared, and viewed in a history section.
+An AI-powered signature generator application built with React Native, Expo, and Node.js. This application allows users to generate custom handwritten signatures by providing text prompts. Generated signatures can be downloaded, shared, and viewed in a history section.
 
 ## Features
 
-- Generate custom logos using AI
-- Save generated logos to your device
-- Share logos with others
-- View history of previously generated logos
-- Simple and intuitive interface
+- Generate custom signatures using AI
+- Save generated signatures to your device
+- Share signatures with others
+- View history of previously generated signatures
+- Choose from different signature styles
 
-## Tech Stack
+## Technology Stack
 
 ### Frontend
 - React Native
 - Expo
 - TypeScript
-- React Navigation
+- Context API for state management
 - AsyncStorage for local storage
 
 ### Backend
 - Node.js
 - Express.js
-- TypeScript
-- Replicate API for logo generation
+- Replicate AI API for signature generation
+
+## Project Structure
+
+```
+project/
+│
+├── frontend/           # React Native Expo app
+│   ├── assets/         # Images, fonts, etc.
+│   │   └── src/
+│   │       └── App.tsx         # Entry point
+│   └── backend/            # Node.js API server
+│       └── src/
+│           └── index.js     # Server entry point
+```
 
 ## Getting Started
 
 ### Prerequisites
-
-- Node.js (v20 or later recommended)
+- Node.js (v14 or later)
 - npm or yarn
 - Expo CLI
-- Replicate API key (get one from [Replicate](https://replicate.com))
+- Replicate API key
 
 ### Installation
 
-1. Clone the repository:
+1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/ai-logo-generator.git
-cd ai-logo-generator
+git clone https://github.com/yourusername/ai-signature-generator.git
+cd ai-signature-generator
 ```
 
-2. Install dependencies:
-
+2. Install backend dependencies
 ```bash
-# Install backend dependencies
 cd backend
 npm install
+```
 
-# Install frontend dependencies
+3. Create a `.env` file in the backend directory with your Replicate API key
+```
+REPLICATE_API_TOKEN=your_api_key_here
+PORT=8080
+```
+
+4. Install frontend dependencies
+```bash
 cd ../frontend
 npm install
 ```
 
-3. Configure environment variables:
+### Running the App
 
-Create a `.env` file in the backend directory:
-```
-PORT=3000
-REPLICATE_API_TOKEN=your_replicate_api_token
-```
-
-4. Start the backend server:
-
+1. Start the backend server
 ```bash
 cd backend
-npm run dev
+npm start
 ```
 
-5. Start the frontend application:
-
+2. Start the Expo development server
 ```bash
 cd frontend
 npm start
 ```
 
-6. Scan the QR code with the Expo Go app on your mobile device or run it in an emulator.
+3. Use the Expo Go app on your device to scan the QR code or use an emulator
 
 ## Usage
 
-1. Enter a prompt for your logo in the input field (e.g., "Minimalist tech company logo")
-2. Tap "Generate Logo" and wait for the AI to create your logo
-3. Once generated, you can download or share the logo
-4. View your logo history in the History tab
+1. Enter a prompt for your signature in the input field (e.g., "John Smith" or "Jane Doe")
+2. Select a style for your signature
+3. Tap "Generate Signature" and wait for the AI to create your signature
+4. Once generated, you can download or share the signature
+5. View your signature history in the History tab
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. 
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Acknowledgments
+
+- [Replicate AI](https://replicate.com/) for the AI model
+- [Expo](https://expo.dev/) for the development framework
+- [React Native](https://reactnative.dev/) for the mobile app framework 

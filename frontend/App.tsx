@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-import { LogoProvider } from "./src/contexts/LogoContext";
+import { SignatureProvider } from "./src/contexts/SignatureContext";
 import { AppNavigator } from "./src/navigation/app-navigator";
 import { SplashScreen } from "./src/screens/splash-screen";
 
@@ -13,13 +13,13 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <LogoProvider>
+      <SignatureProvider>
         {showSplash ? (
           <SplashScreen onFinish={onSplashFinish} />
         ) : (
           <AppNavigator />
         )}
-      </LogoProvider>
+      </SignatureProvider>
     </SafeAreaProvider>
   );
 }

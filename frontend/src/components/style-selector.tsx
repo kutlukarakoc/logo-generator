@@ -1,124 +1,152 @@
 import React from 'react';
 import {
-  StyleSheet,
   View,
   Text,
+  StyleSheet,
+  FlatList,
   TouchableOpacity,
   Image,
-  ScrollView,
-  useWindowDimensions,
+  Dimensions,
 } from 'react-native';
-import { LogoStyle } from '../types';
+import { SignatureStyle, SignatureStyleDescriptions } from '../types';
 
 interface StyleOption {
-  id: LogoStyle;
+  id: SignatureStyle;
   name: string;
-  image: any; // In a real app, you would use proper image imports
+  image: any;
 }
 
-// These are placeholder images - in a real implementation, you would use actual style preview images
 const styleOptions: StyleOption[] = [
-  { id: LogoStyle.HAND_DRAWN, name: 'Hand-drawn', image: require('../../assets/styles/handdrawn.png') },
-  { id: LogoStyle.GRUNGE, name: 'Grunge', image: require('../../assets/styles/grunge.png') },
-  { id: LogoStyle.VINTAGE, name: 'Vintage', image: require('../../assets/styles/vintage.png') },
-  { id: LogoStyle.VIBRANT, name: 'Vibrant', image: require('../../assets/styles/vibrant.png') },
-  { id: LogoStyle.SYMBOLIC, name: 'Symbolic', image: require('../../assets/styles/symbolic.png') },
-  { id: LogoStyle.ELEGANT, name: 'Elegant', image: require('../../assets/styles/elegant.png') },
-  { id: LogoStyle.HOLOGRAPHIC, name: 'Holographic', image: require('../../assets/styles/holographic.png') },
-  { id: LogoStyle.TEXT_LOGO, name: 'Text Logo', image: require('../../assets/styles/text.png') },
-  { id: LogoStyle.SIGNATURE, name: 'Signature', image: require('../../assets/styles/signature.png') },
-  { id: LogoStyle.MASCOT, name: 'Mascot', image: require('../../assets/styles/mascot.png') },
-  { id: LogoStyle.CLASSIC, name: 'Classic', image: require('../../assets/styles/classic.png') },
-  { id: LogoStyle.MINIMALIST, name: 'Minimalist', image: require('../../assets/styles/minimalist.png') },
-  { id: LogoStyle.GEOMETRIC, name: 'Geometric', image: require('../../assets/styles/geometric.png') },
-  { id: LogoStyle.FUTURISTIC, name: 'Futuristic', image: require('../../assets/styles/futuristic.png') },
-  { id: LogoStyle.ABSTRACT, name: 'Abstract', image: require('../../assets/styles/abstract.png') },
-  { id: LogoStyle.CORPORATE, name: 'Corporate', image: require('../../assets/styles/corporate.png') },
-  { id: LogoStyle.ART_DECO, name: 'Art Deco', image: require('../../assets/styles/artdeco.png') },
-  { id: LogoStyle.MODERN, name: 'Modern', image: require('../../assets/styles/modern.png') },
-  { id: LogoStyle.MONOGRAM, name: 'Monogram', image: require('../../assets/styles/monogram.png') },
-  { id: LogoStyle.NEON, name: 'Neon', image: require('../../assets/styles/neon.png') },
-  { id: LogoStyle.GRADIENT, name: 'Gradient', image: require('../../assets/styles/gradient.png') },
-  { id: LogoStyle.COLORFUL_3D, name: '3D Colorful', image: require('../../assets/styles/colorful3d.png') },
-  { id: LogoStyle.POP_ART, name: 'Pop Art', image: require('../../assets/styles/popart.png') },
+  { id: SignatureStyle.CLASSIC, name: 'Classic', image: require('../../assets/styles/classic.png') },
+  { id: SignatureStyle.ELEGANT, name: 'Elegant', image: require('../../assets/styles/elegant.png') },
+  { id: SignatureStyle.BOLD, name: 'Bold', image: require('../../assets/styles/bold.png') },
+  { id: SignatureStyle.MINIMALIST, name: 'Minimalist', image: require('../../assets/styles/minimalist.png') },
+  { id: SignatureStyle.ARTISTIC, name: 'Artistic', image: require('../../assets/styles/artistic.png') },
+  { id: SignatureStyle.CASUAL, name: 'Casual', image: require('../../assets/styles/casual.png') },
+  { id: SignatureStyle.PROFESSIONAL, name: 'Professional', image: require('../../assets/styles/professional.png') },
+  { id: SignatureStyle.CALLIGRAPHY, name: 'Calligraphy', image: require('../../assets/styles/calligraphy.png') },
+  { id: SignatureStyle.MODERN, name: 'Modern', image: require('../../assets/styles/modern.png') },
+  { id: SignatureStyle.SCRIPT, name: 'Script', image: require('../../assets/styles/script.png') },
+  { id: SignatureStyle.CORPORATE, name: 'Corporate', image: require('../../assets/styles/corporate.png') },
+  { id: SignatureStyle.HANDWRITTEN, name: 'Handwritten', image: require('../../assets/styles/handwritten.png') },
+  { id: SignatureStyle.VINTAGE, name: 'Vintage', image: require('../../assets/styles/vintage.png') },
+  { id: SignatureStyle.FORMAL, name: 'Formal', image: require('../../assets/styles/formal.png') },
+  { id: SignatureStyle.CREATIVE, name: 'Creative', image: require('../../assets/styles/creative.png') },
+  { id: SignatureStyle.STYLIZED, name: 'Stylized', image: require('../../assets/styles/stylized.png') },
+  { id: SignatureStyle.DECORATIVE, name: 'Decorative', image: require('../../assets/styles/decorative.png') },
+  { id: SignatureStyle.FLOURISH, name: 'Flourish', image: require('../../assets/styles/flourish.png') },
+  { id: SignatureStyle.MONOLINE, name: 'Monoline', image: require('../../assets/styles/monoline.png') },
+  { id: SignatureStyle.BRUSH, name: 'Brush', image: require('../../assets/styles/brush.png') },
+  { id: SignatureStyle.GOTHIC, name: 'Gothic', image: require('../../assets/styles/gothic.png') },
 ];
 
 interface StyleSelectorProps {
-  selectedStyle: LogoStyle | null;
-  onSelectStyle: (style: LogoStyle) => void;
+  selectedStyle: SignatureStyle | null;
+  onSelectStyle: (style: SignatureStyle) => void;
 }
 
 export function StyleSelector({ selectedStyle, onSelectStyle }: StyleSelectorProps) {
-  const { width } = useWindowDimensions();
-  const itemSize = 90; // Fixed size for each style option
-  const itemMargin = 10;
+  const renderStyleOption = ({ item }: { item: StyleOption }) => {
+    const isSelected = selectedStyle === item.id;
+    
+    return (
+      <TouchableOpacity
+        style={[styles.styleOption, isSelected && styles.selectedStyle]}
+        onPress={() => onSelectStyle(item.id)}
+        activeOpacity={0.7}
+      >
+        <Image source={item.image} style={styles.styleImage} />
+        <Text style={[styles.styleName, isSelected && styles.selectedText]}>
+          {item.name}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  const getStyleDescription = () => {
+    if (!selectedStyle) return '';
+    return SignatureStyleDescriptions[selectedStyle];
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Select a Style</Text>
+      <Text style={styles.title}>Choose a Style</Text>
       
-      <ScrollView 
-        horizontal={true}
+      <FlatList
+        data={styleOptions}
+        renderItem={renderStyleOption}
+        keyExtractor={(item) => item.id}
+        horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.styleGrid}
-      >
-        {styleOptions.map((option) => (
-          <TouchableOpacity
-            key={option.id}
-            style={[
-              styles.styleOption,
-              { width: itemSize, height: itemSize + 30 }, // Extra height for the text
-              selectedStyle === option.id && styles.selectedOption,
-            ]}
-            onPress={() => onSelectStyle(option.id)}
-          >
-            <Image
-              source={option.image}
-              style={styles.styleImage}
-              resizeMode="cover"
-            />
-            <Text style={styles.styleName}>{option.name}</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
+        contentContainerStyle={styles.styleList}
+      />
+      
+      {selectedStyle && (
+        <View style={styles.descriptionContainer}>
+          <Text style={styles.descriptionText}>{getStyleDescription()}</Text>
+        </View>
+      )}
     </View>
   );
 }
 
+const { width } = Dimensions.get('window');
+
 const styles = StyleSheet.create({
   container: {
-    marginTop: 20,
-    marginBottom: 20,
+    marginVertical: 15,
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 16,
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+    paddingHorizontal: 16,
     color: '#333',
   },
-  styleGrid: {
-    paddingVertical: 10,
-    flexDirection: 'row',
+  styleList: {
+    paddingHorizontal: 12,
+    paddingVertical: 8,
   },
   styleOption: {
+    alignItems: 'center',
+    marginHorizontal: 8,
+    width: 80,
+    padding: 8,
     borderRadius: 12,
-    marginRight: 12,
-    overflow: 'hidden',
-    backgroundColor: '#f4f4f4',
+    backgroundColor: '#f5f5f5',
   },
-  selectedOption: {
+  selectedStyle: {
+    backgroundColor: '#e0e7ff',
     borderWidth: 2,
-    borderColor: '#3498db',
+    borderColor: '#4a6ee0',
   },
   styleImage: {
-    width: '100%',
-    height: '70%',
-    backgroundColor: '#e0e0e0',
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    marginBottom: 8,
   },
   styleName: {
     fontSize: 12,
-    textAlign: 'center',
-    paddingVertical: 8,
     fontWeight: '500',
+    textAlign: 'center',
+    color: '#555',
+  },
+  selectedText: {
+    color: '#4a6ee0',
+    fontWeight: '600',
+  },
+  descriptionContainer: {
+    marginTop: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 8,
+    marginHorizontal: 16,
+  },
+  descriptionText: {
+    fontSize: 14,
+    color: '#555',
+    lineHeight: 20,
   },
 }); 

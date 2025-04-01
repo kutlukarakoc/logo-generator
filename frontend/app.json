@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Logo Generator",
+    "name": "Signature Generator",
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -20,11 +20,11 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.logo-generator.app",
+      "bundleIdentifier": "com.signature-generator.app",
       "buildNumber": "1.0.0",
       "infoPlist": {
-        "NSPhotoLibraryAddUsageDescription": "Logo Generator needs permission to save logos to your gallery.",
-        "NSPhotoLibraryUsageDescription": "Logo Generator needs permission to save logos to your gallery.",
+        "NSPhotoLibraryAddUsageDescription": "Signature Generator needs permission to save signatures to your gallery.",
+        "NSPhotoLibraryUsageDescription": "Signature Generator needs permission to save signatures to your gallery.",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
@@ -32,16 +32,11 @@
       [
         "expo-media-library",
         {
-          "photosPermission": "Logo Generator needs permission to save logos to your gallery.",
-          "savePhotosPermission": "Logo Generator needs permission to save logos to your gallery.",
+          "photosPermission": "Signature Generator needs permission to save signatures to your gallery.",
+          "savePhotosPermission": "Signature Generator needs permission to save signatures to your gallery.",
           "isAccessMediaLocationEnabled": true
         }
       ]
-    ],
-    "extra": {
-      "eas": {
-        "projectId": "bec4dca2-9547-4035-aa6e-b0520576b4f8"
-      }
-    }
+    ]
   }
 }

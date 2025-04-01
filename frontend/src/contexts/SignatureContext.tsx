@@ -1,25 +1,25 @@
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
-import { AppState, AppAction, Logo } from '../types';
-import { getLogosFromStorage } from '../utils/storage';
+import { AppState, AppAction } from '../types';
+import { getSignaturesFromStorage } from '../utils/storage';
 import { ENDPOINTS } from '../utils/config';
 
 const initialState: AppState = {
-  logos: [],
+  signatures: [],
   isLoading: false,
   error: null,
 };
 
 function appReducer(state: AppState, action: AppAction): AppState {
   switch (action.type) {
-    case 'ADD_LOGO':
+    case 'ADD_SIGNATURE':
       return {
         ...state,
-        logos: [action.payload, ...state.logos],
+        signatures: [action.payload, ...state.signatures],
       };
-    case 'SET_LOGOS':
+    case 'SET_SIGNATURES':
       return {
         ...state,
-        logos: action.payload,
+        signatures: action.payload,
       };
     case 'SET_LOADING':
       return {
@@ -36,32 +36,32 @@ function appReducer(state: AppState, action: AppAction): AppState {
   }
 }
 
-interface LogoContextProps {
+interface SignatureContextProps {
   state: AppState;
   dispatch: React.Dispatch<AppAction>;
-  generateLogo: (prompt: string) => Promise<string | null>;
+  generateSignature: (prompt: string) => Promise<string | null>;
 }
 
-const LogoContext = createContext<LogoContextProps | undefined>(undefined);
+const SignatureContext = createContext<SignatureContextProps | undefined>(undefined);
 
-export function LogoProvider({ children }: { children: React.ReactNode }) {
+export function SignatureProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
   useEffect(() => {
-    const loadLogos = async () => {
-      const savedLogos = await getLogosFromStorage();
-      dispatch({ type: 'SET_LOGOS', payload: savedLogos });
+    const loadSignatures = async () => {
+      const savedSignatures = await getSignaturesFromStorage();
+      dispatch({ type: 'SET_SIGNATURES', payload: savedSignatures });
     };
 
-    loadLogos();
+    loadSignatures();
   }, []);
 
-  const generateLogo = async (prompt: string): Promise<string | null> => {
+  const generateSignature = async (prompt: string): Promise<string | null> => {
     try {
       dispatch({ type: 'SET_LOADING', payload: true });
       dispatch({ type: 'SET_ERROR', payload: null });
 
-      const response = await fetch(ENDPOINTS.GENERATE_LOGO, {
+      const response = await fetch(ENDPOINTS.GENERATE_SIGNATURE, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export function LogoProvider({ children }: { children: React.ReactNode }) {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate logo');
+        throw new Error('Failed to generate signature');
       }
 
       const data = await response.json();
@@ -78,7 +78,7 @@ export function LogoProvider({ children }: { children: React.ReactNode }) {
       // Poll for the result
       const maxAttempts = 30;
       let attempts = 0;
-      let logoUrl: string | null = null;
+      let signatureUrl: string | null = null;
       
       while (attempts < maxAttempts) {
         attempts++;
@@ -86,23 +86,23 @@ export function LogoProvider({ children }: { children: React.ReactNode }) {
         const statusData = await statusResponse.json();
         
         if (statusData.status === 'succeeded' && statusData.output && statusData.output.length > 0) {
-          logoUrl = statusData.output[0];
+          signatureUrl = statusData.output[0];
           break;
         }
         
         if (statusData.status === 'failed') {
-          throw new Error('Logo generation failed');
+          throw new Error('Signature generation failed');
         }
         
         // Wait 2 seconds before polling again
         await new Promise(resolve => setTimeout(resolve, 2000));
       }
       
-      if (!logoUrl) {
-        throw new Error('Timeout waiting for logo generation');
+      if (!signatureUrl) {
+        throw new Error('Timeout waiting for signature generation');
       }
       
-      return logoUrl;
+      return signatureUrl;
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
       dispatch({ type: 'SET_ERROR', payload: errorMessage });
@@ -113,16 +113,16 @@ export function LogoProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LogoContext.Provider value={{ state, dispatch, generateLogo }}>
+    <SignatureContext.Provider value={{ state, dispatch, generateSignature }}>
       {children}
-    </LogoContext.Provider>
+    </SignatureContext.Provider>
   );
 }
 
-export function useLogoContext() {
-  const context = useContext(LogoContext);
+export function useSignatureContext() {
+  const context = useContext(SignatureContext);
   if (context === undefined) {
-    throw new Error('useLogoContext must be used within a LogoProvider');
+    throw new Error('useSignatureContext must be used within a SignatureProvider');
   }
   return context;
 } 
