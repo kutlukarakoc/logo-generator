@@ -13,8 +13,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLogoContext } from '../contexts/LogoContext';
-import { LogoCard } from '../components/logo-card';
 import { StyleSelector } from '../components/style-selector';
+import { LogoModal } from '../components/logo-modal';
 import { saveLogoToStorage } from '../utils/storage';
 import { Logo, LogoStyle, LogoStyleDescriptions } from '../types';
 
@@ -23,6 +23,7 @@ export function HomeScreen() {
   const [selectedStyle, setSelectedStyle] = useState<LogoStyle | null>(null);
   const { state, generateLogo } = useLogoContext();
   const [currentLogo, setCurrentLogo] = useState<Logo | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleSelectStyle = (style: LogoStyle) => {
     setSelectedStyle(style);
@@ -60,10 +61,17 @@ export function HomeScreen() {
         
         setCurrentLogo(newLogo);
         await saveLogoToStorage(newLogo);
+        
+        // Show the modal with the generated logo
+        setModalVisible(true);
       }
     } catch (error) {
       console.error('Error in handleGenerateLogo:', error);
     }
+  };
+  
+  const handleCloseModal = () => {
+    setModalVisible(false);
   };
 
   return (
@@ -115,15 +123,14 @@ export function HomeScreen() {
           {state.error && (
             <Text style={styles.errorText}>{state.error}</Text>
           )}
-          
-          {currentLogo && (
-            <View style={styles.resultContainer}>
-              <Text style={styles.resultTitle}>Your Logo</Text>
-              <LogoCard logo={currentLogo} />
-            </View>
-          )}
         </ScrollView>
       </KeyboardAvoidingView>
+      
+      <LogoModal 
+        visible={modalVisible}
+        logo={currentLogo}
+        onClose={handleCloseModal}
+      />
     </SafeAreaView>
   );
 }
