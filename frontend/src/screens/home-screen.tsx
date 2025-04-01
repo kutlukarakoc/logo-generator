@@ -14,13 +14,19 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLogoContext } from '../contexts/LogoContext';
 import { LogoCard } from '../components/logo-card';
+import { StyleSelector } from '../components/style-selector';
 import { saveLogoToStorage } from '../utils/storage';
-import { Logo } from '../types';
+import { Logo, LogoStyle, LogoStyleDescriptions } from '../types';
 
 export function HomeScreen() {
   const [prompt, setPrompt] = useState('');
+  const [selectedStyle, setSelectedStyle] = useState<LogoStyle | null>(null);
   const { state, generateLogo } = useLogoContext();
   const [currentLogo, setCurrentLogo] = useState<Logo | null>(null);
+
+  const handleSelectStyle = (style: LogoStyle) => {
+    setSelectedStyle(style);
+  };
 
   const handleGenerateLogo = async () => {
     if (!prompt.trim()) {
@@ -28,8 +34,17 @@ export function HomeScreen() {
       return;
     }
 
+    if (!selectedStyle) {
+      Alert.alert('Error', 'Please select a logo style');
+      return;
+    }
+
     try {
-      const logoUrl = await generateLogo(prompt);
+      // Combine user prompt with style description
+      const styleDescription = LogoStyleDescriptions[selectedStyle];
+      const fullPrompt = `${prompt}. ${styleDescription}`;
+      
+      const logoUrl = await generateLogo(fullPrompt);
       
       if (logoUrl) {
         const newLogo: Logo = {
@@ -37,6 +52,7 @@ export function HomeScreen() {
           prompt: prompt,
           imageUrl: logoUrl,
           createdAt: new Date().toISOString(),
+          style: selectedStyle,
         };
         
         setCurrentLogo(newLogo);
@@ -61,31 +77,37 @@ export function HomeScreen() {
           <Text style={styles.subtitle}>Create beautiful AI-powered logos</Text>
           
           <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>Your Logo Idea</Text>
             <TextInput
               style={styles.input}
-              placeholder="Describe your logo... (e.g., Minimalist tech company logo)"
+              placeholder="Enter your brand name, industry, and the elements you want to appear in the logo."
               value={prompt}
               onChangeText={setPrompt}
               multiline
               numberOfLines={3}
               maxLength={200}
             />
-            
-            <TouchableOpacity 
-              style={[
-                styles.generateButton, 
-                state.isLoading && styles.disabledButton
-              ]}
-              onPress={handleGenerateLogo}
-              disabled={state.isLoading}
-            >
-              {state.isLoading ? (
-                <ActivityIndicator color="#fff" />
-              ) : (
-                <Text style={styles.generateButtonText}>Generate Logo</Text>
-              )}
-            </TouchableOpacity>
           </View>
+          
+          <StyleSelector 
+            selectedStyle={selectedStyle}
+            onSelectStyle={handleSelectStyle}
+          />
+          
+          <TouchableOpacity 
+            style={[
+              styles.generateButton, 
+              state.isLoading && styles.disabledButton
+            ]}
+            onPress={handleGenerateLogo}
+            disabled={state.isLoading}
+          >
+            {state.isLoading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.generateButtonText}>Generate Logo</Text>
+            )}
+          </TouchableOpacity>
           
           {state.error && (
             <Text style={styles.errorText}>{state.error}</Text>
@@ -129,15 +151,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   inputContainer: {
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 10,
-    elevation: 2,
-    marginBottom: 24,
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 12,
+    color: '#333',
   },
   input: {
     fontSize: 16,
@@ -146,20 +166,21 @@ const styles = StyleSheet.create({
     padding: 12,
     minHeight: 80,
     textAlignVertical: 'top',
-    marginBottom: 16,
   },
   generateButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#6c5ce7',
     borderRadius: 8,
-    paddingVertical: 14,
+    paddingVertical: 16,
     alignItems: 'center',
+    marginTop: 24,
+    marginBottom: 16,
   },
   disabledButton: {
-    backgroundColor: '#95a5a6',
+    opacity: 0.7,
   },
   generateButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
   },
   errorText: {
