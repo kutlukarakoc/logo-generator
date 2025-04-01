@@ -17,6 +17,7 @@ import { StyleSelector } from '../components/style-selector';
 import { LogoModal } from '../components/logo-modal';
 import { saveLogoToStorage } from '../utils/storage';
 import { Logo, LogoStyle, LogoStyleDescriptions } from '../types';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export function HomeScreen() {
   const [prompt, setPrompt] = useState('');
@@ -106,18 +107,26 @@ export function HomeScreen() {
           />
           
           <TouchableOpacity 
-            style={[
-              styles.generateButton, 
-              state.isLoading && styles.disabledButton
-            ]}
+            activeOpacity={0.8}
             onPress={handleGenerateLogo}
             disabled={state.isLoading}
+            style={styles.generateButtonContainer}
           >
-            {state.isLoading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.generateButtonText}>Generate Logo</Text>
-            )}
+            <LinearGradient
+              colors={['#4299e1', '#805ad5']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={[
+                styles.generateButton,
+                state.isLoading && styles.disabledButton
+              ]}
+            >
+              {state.isLoading ? (
+                <ActivityIndicator color="#fff" size="large" />
+              ) : (
+                <Text style={styles.generateButtonText}>Generate Logo</Text>
+              )}
+            </LinearGradient>
           </TouchableOpacity>
           
           {state.error && (
@@ -177,21 +186,30 @@ const styles = StyleSheet.create({
     minHeight: 80,
     textAlignVertical: 'top',
   },
+  generateButtonContainer: {
+    marginTop: 30,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 12,
+    elevation: 7,
+  },
   generateButton: {
-    backgroundColor: '#6c5ce7',
-    borderRadius: 8,
-    paddingVertical: 16,
+    borderRadius: 16,
+    paddingVertical: 18,
     alignItems: 'center',
-    marginTop: 24,
-    marginBottom: 16,
+    justifyContent: 'center',
+    height: 60,
   },
   disabledButton: {
-    opacity: 0.7,
+    opacity: 0.6,
   },
   generateButtonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
+    letterSpacing: 0.5,
   },
   errorText: {
     color: '#e74c3c',
