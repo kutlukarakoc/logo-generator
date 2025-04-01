@@ -50,3 +50,29 @@ export const generateLogo = async (req: Request, res: Response): Promise<void> =
     res.status(500).json({ error: 'Failed to generate logo' });
   }
 };
+
+export const checkLogoStatus = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      res.status(400).json({ error: 'Prediction ID is required' });
+      return;
+    }
+
+    const response = await axios.get(
+      `https://api.replicate.com/v1/predictions/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${REPLICATE_API_TOKEN}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    res.status(200).json(response.data);
+  } catch (error) {
+    console.error('Error checking logo status:', error);
+    res.status(500).json({ error: 'Failed to check logo status' });
+  }
+}; 
