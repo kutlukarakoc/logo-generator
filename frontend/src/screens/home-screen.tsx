@@ -34,15 +34,18 @@ export function HomeScreen() {
       return;
     }
 
-    if (!selectedStyle) {
-      Alert.alert('Error', 'Please select a logo style');
-      return;
-    }
-
     try {
-      // Combine user prompt with style description
-      const styleDescription = LogoStyleDescriptions[selectedStyle];
-      const fullPrompt = `${prompt}. ${styleDescription}`;
+      // Create the prompt based on whether a style is selected
+      let fullPrompt = '';
+      
+      if (selectedStyle) {
+        // If style is selected, append the style description
+        const styleDescription = LogoStyleDescriptions[selectedStyle];
+        fullPrompt = `${prompt}. ${styleDescription}`;
+      } else {
+        // If no style is selected, just add a generic logo design suffix
+        fullPrompt = `${prompt}. Logo design`;
+      }
       
       const logoUrl = await generateLogo(fullPrompt);
       
@@ -52,7 +55,7 @@ export function HomeScreen() {
           prompt: prompt,
           imageUrl: logoUrl,
           createdAt: new Date().toISOString(),
-          style: selectedStyle,
+          style: selectedStyle || undefined,
         };
         
         setCurrentLogo(newLogo);
