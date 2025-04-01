@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "frontend",
+    "name": "Logo Generator",
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -13,16 +13,22 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+      "supportsTablet": true,
+      "bundleIdentifier": "com.logogenerator.app",
+      "infoPlist": {
+        "NSPhotoLibraryAddUsageDescription": "Logo Generator needs permission to save logos to your gallery.",
+        "NSPhotoLibraryUsageDescription": "Logo Generator needs permission to save logos to your gallery."
       }
     },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    }
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Logo Generator needs permission to save logos to your gallery.",
+          "savePhotosPermission": "Logo Generator needs permission to save logos to your gallery.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ]
   }
 }
