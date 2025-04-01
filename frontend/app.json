@@ -7,6 +7,10 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
+    "splash": {
+      "backgroundColor": "#6c5ce7",
+      "image": null
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.logogenerator.app",
