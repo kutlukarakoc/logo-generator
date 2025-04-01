@@ -11,12 +11,20 @@
       "backgroundColor": "#6c5ce7",
       "image": null
     },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.logogenerator.app",
+      "buildNumber": "1.0.0",
       "infoPlist": {
         "NSPhotoLibraryAddUsageDescription": "Logo Generator needs permission to save logos to your gallery.",
-        "NSPhotoLibraryUsageDescription": "Logo Generator needs permission to save logos to your gallery."
+        "NSPhotoLibraryUsageDescription": "Logo Generator needs permission to save logos to your gallery.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "plugins": [
@@ -28,6 +36,11 @@
           "isAccessMediaLocationEnabled": true
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "bec4dca2-9547-4035-aa6e-b0520576b4f8"
+      }
+    }
   }
 }

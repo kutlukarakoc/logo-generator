@@ -22,43 +22,30 @@ export function LogoCard({ logo, showPrompt = true }: LogoCardProps) {
   const { width } = useWindowDimensions();
   const cardWidth = width > 600 ? 500 : width - 40;
 
-  const checkAndRequestPermission = async () => {
-    const { status: existingStatus } = await MediaLibrary.getPermissionsAsync();
-    
-    if (existingStatus === 'granted') {
-      return true;
-    }
-
-    return new Promise((resolve) => {
-      Alert.alert(
-        "Logo Generator",
-        "Logo Generator needs permission to save logos to your gallery.",
-        [
-          {
-            text: "Allow",
-            onPress: async () => {
-              const { status } = await MediaLibrary.requestPermissionsAsync();
-              resolve(status === 'granted');
-            },
-          },
-          {
-            text: "Deny",
-            style: "cancel",
-            onPress: () => resolve(false),
-          },
-        ]
-      );
-    });
-  };
-
   const downloadLogo = async () => {
     try {
-      const hasPermission = await checkAndRequestPermission();
+      // Get current permission status
+      const { status } = await MediaLibrary.getPermissionsAsync();
       
-      if (!hasPermission) {
-        return;
+      // If we don't have permission, directly request system permission
+      if (status !== 'granted') {
+        const { status: newStatus } = await MediaLibrary.requestPermissionsAsync();
+        if (newStatus !== 'granted') {
+          Alert.alert('Permission denied', 'Unable to save logo without gallery permission.');
+          return;
+        }
       }
+      
+      // Proceed with download after permission is granted
+      saveToGallery();
+    } catch (error) {
+      console.error('Error checking permissions:', error);
+      Alert.alert('Error', 'An error occurred while checking permissions.');
+    }
+  };
 
+  const saveToGallery = async () => {
+    try {
       // Create a file name
       const fileName = `logo-${logo.id}.png`;
       const fileUri = `${FileSystem.documentDirectory}${fileName}`;
@@ -77,8 +64,8 @@ export function LogoCard({ logo, showPrompt = true }: LogoCardProps) {
         Alert.alert("Error", "Failed to download the logo");
       }
     } catch (error) {
-      console.error("Error downloading logo:", error);
-      Alert.alert("Error", "An error occurred while downloading the logo");
+      console.error("Error saving logo to gallery:", error);
+      Alert.alert("Error", "An error occurred while saving the logo");
     }
   };
 
