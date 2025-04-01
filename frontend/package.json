@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
+    "dev": "expo start -c",
     "start": "expo start",
-    "ios": "expo start --ios"
+    "ios": "expo start -c --ios"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "1.23.1",
