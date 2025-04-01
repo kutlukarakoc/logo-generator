@@ -22,7 +22,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 export function HomeScreen() {
   const [prompt, setPrompt] = useState('');
   const [selectedStyle, setSelectedStyle] = useState<LogoStyle | null>(null);
-  const { state, generateLogo } = useLogoContext();
+  const { state, dispatch, generateLogo } = useLogoContext();
   const [currentLogo, setCurrentLogo] = useState<Logo | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
@@ -62,6 +62,9 @@ export function HomeScreen() {
         
         setCurrentLogo(newLogo);
         await saveLogoToStorage(newLogo);
+        
+        // Add the new logo to the context state
+        dispatch({ type: 'ADD_LOGO', payload: newLogo });
         
         // Show the modal with the generated logo
         setModalVisible(true);
