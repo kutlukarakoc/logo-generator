@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Ionicons } from '@expo/vector-icons';
 import { HomeScreen } from '../screens/home-screen';
 import { HistoryScreen } from '../screens/history-screen';
 
@@ -31,6 +32,9 @@ function MainTabs() {
         component={HomeScreen} 
         options={{
           tabBarLabel: 'Create',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="add-circle-outline" size={size} color={color} />
+          ),
         }}
       />
       <Tab.Screen 
@@ -38,6 +42,9 @@ function MainTabs() {
         component={HistoryScreen} 
         options={{
           tabBarLabel: 'History',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="time-outline" size={size} color={color} />
+          ),
         }}
       />
     </Tab.Navigator>
