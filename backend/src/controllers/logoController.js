@@ -1,12 +1,11 @@
-import { Request, Response } from 'express';
-import axios from 'axios';
-import dotenv from 'dotenv';
+const axios = require('axios');
+const dotenv = require('dotenv');
 
 dotenv.config();
 
 const REPLICATE_API_TOKEN = process.env.REPLICATE_API_TOKEN;
 
-export const generateLogo = async (req: Request, res: Response): Promise<void> => {
+const generateLogo = async (req, res) => {
   try {
     const { prompt } = req.body;
 
@@ -51,7 +50,7 @@ export const generateLogo = async (req: Request, res: Response): Promise<void> =
   }
 };
 
-export const checkLogoStatus = async (req: Request, res: Response): Promise<void> => {
+const checkLogoStatus = async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -75,4 +74,9 @@ export const checkLogoStatus = async (req: Request, res: Response): Promise<void
     console.error('Error checking logo status:', error);
     res.status(500).json({ error: 'Failed to check logo status' });
   }
+};
+
+module.exports = {
+  generateLogo,
+  checkLogoStatus
 }; 

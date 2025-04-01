@@ -1,7 +1,7 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import logoRoutes from './routes/logoRoutes';
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const logoRoutes = require('./routes/logoRoutes');
 
 dotenv.config();
 
