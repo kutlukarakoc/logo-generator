@@ -12,14 +12,20 @@ build/
 dist/
 out/
 
-# Misc
-.DS_Store
+# Environment Variables
 .env
+.env.*
+**/.env
+**/.env.*
+backend/.env
+frontend/.env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-.env.*
+
+# Misc
+.DS_Store
 
 # Debug logs
 npm-debug.log*
@@ -40,8 +46,5 @@ web-build/
 
 # Metro
 .metro-health-check*
-
-# Local env files
-.env*.local
 
 .cursorrules
