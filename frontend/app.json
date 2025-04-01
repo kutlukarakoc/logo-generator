@@ -9,7 +9,8 @@
     "newArchEnabled": true,
     "splash": {
       "backgroundColor": "#6c5ce7",
-      "image": null
+      "image": "./assets/icon.png",
+      "resizeMode": "contain"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,7 +20,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.logogenerator.app",
+      "bundleIdentifier": "com.logo-generator.app",
       "buildNumber": "1.0.0",
       "infoPlist": {
         "NSPhotoLibraryAddUsageDescription": "Logo Generator needs permission to save logos to your gallery.",
